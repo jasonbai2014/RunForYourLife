@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RUN FOR YOUR LIFE!</title>
+
+    <link rel="stylesheet" href="layout.css">
+    
+    <script type="text/javascript" src="./scripts/entity.js"></script>
+    <script type="text/javascript" src="./scripts/animation.js"></script>
+    <script type="text/javascript" src="./scripts/player.js"></script>
+    <script type="text/javascript" src="./scripts/soundmanager2-nodebug-jsmin.js"></script>
+    <script type="text/javascript" src="./scripts/gameEngine.js"></script>
+    <script type="text/javascript" src="./scripts/assetManager.js"></script>
+    <script type="text/javascript" src="./scripts/main.js"></script>
+</head>
+
+<body onload="loadAssets()">
+    <canvas id="gameWorld" width="1000" height="600" style="border:3px solid #000000; background-color:black;"></canvas>
+    <h1>Controls</h1>
+    <ul>
+        <li>D - walking to the right</li>
+        <li>D + D - running to the right</li>
+        <li>A - walking to the left</li>
+        <li>A + A - running to the left</li>
+        <li>W (idle) - jumping</li>
+        <li>W (walking) - walking and jumping</li>
+        <li>W (running) - running and jumping</li>
+        <li>S - teleporting (only works when the player is in idle state)</li>
+        <li>I - attacking</li>
+        <li>O - throwing knives</li>
+        <li>P - special attack</li>
+    </ul>
+</body>
+</html>
