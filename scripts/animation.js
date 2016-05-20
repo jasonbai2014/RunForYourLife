@@ -979,6 +979,7 @@ Boss.prototype.specialAttack = function() {
 
 Boss.prototype.idle = function() {
     this.specialAttacking = false;
+    this.isHit = false;
     Enemy.prototype.idle.call(this);
 }
 
@@ -1060,18 +1061,24 @@ BossAI.prototype.decideAction = function() {
     this.enemy.movingToRight = (distance.x > 0);
     var moving = this.track(distance.x, distance.y);
 
+    if (this.enemy.specialAttackCoolDown > 0) {
+        this.enemy.specialAttackCoolDown--;
+    }
+
     if (((!moving && !this.enemy.isTeleporting) || this.enemy.specialAttacking) && (!this.enemy.isHit && !this.enemy.isGettingUp)) {
         if ((this.enemy.specialAttackCoolDown === 0 && this.enemy.currentEnergy > 50) || this.enemy.specialAttacking) {
             this.enemy.specialAttack();
+            return;
         }
+    }
+
+    if (this.enemy.specialAttacking && this.enemy.isHit) {
+        this.enemy.specialAttack();
+        return;
     }
 
     if (!this.enemy.specialAttacking || (this.enemy.isHit || this.enemy.isGettingUp)) {
         EnemyAI.prototype.decideAction.call(this);
-    }
-
-    if (this.enemy.specialAttackCoolDown > 0) {
-        this.enemy.specialAttackCoolDown--;
     }
 }
 
