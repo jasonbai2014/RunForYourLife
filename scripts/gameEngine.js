@@ -40,6 +40,7 @@ function GameEngine() {
     this.isWinner = false;
     this.alpha = 0.0;
     this.alpha2 = 0.0;
+    this.playing = false;
 }
 
 GameEngine.prototype.init = function(ctx) {
@@ -53,11 +54,41 @@ GameEngine.prototype.init = function(ctx) {
 
 GameEngine.prototype.start = function() {
     var that = this;
-    (function gameLoop() {
-        that.loop();
-        requestAnimFrame(gameLoop, that.ctx.canvas);
-    })();
+
+    this.ctx.font = "25px Arial";
+    this.ctx.fillStyle = "rgba(255,255,0,1)";
+    this.ctx.textAlign = "center";
+    this.ctx.fillText("You have been captured by an evil clan of ninjas who reside in the forest.", this.camera.position.x + 5, this.camera.position.y - 60);
+    this.ctx.fillText("They have locked you inside of their impenetrable stone cage as a prisoner.", this.camera.position.x + 5, this.camera.position.y - 30);
+    this.ctx.fillText("You aren't doing much when one of the clansmen begins harrasing you.", this.camera.position.x + 5, this.camera.position.y);
+    this.ctx.fillText("Now it is time to escape and destroy this band of ninjas and their leader...", this.camera.position.x + 5, this.camera.position.y + 30);
+
+    this.ctx.font = "20px Arial";
+    this.ctx.fillText("press spacebar to continue...", this.camera.position.x + 5, this.camera.position.y + 100);
+
+    document.addEventListener("keydown", this.startGame, false);
+
+    // (function gameLoop() {
+    //     that.loop();
+    //     requestAnimFrame(gameLoop, that.ctx.canvas);
+    // })();
+
+
+    var that = this;
+    this.startGame = function(event) {
+        if (event.keyCode === 32 && !that.isPlaying) {
+            (function gameLoop() {
+                that.loop();
+                requestAnimFrame(gameLoop, that.ctx.canvas);
+            })();
+        }
+        event.preventDefault();
+    }
+
+    document.addEventListener("keydown", this.startGame, false);
 }
+
+GameEngine.prototype.startGame = function() {}
 
 GameEngine.prototype.addPlayer = function(player) {
     this.players.push(player);
@@ -69,7 +100,6 @@ GameEngine.prototype.addEnemy = function(enemy) {
     var barBackgroundTexture = new Texture(AM.getAsset("./images/healthBarEnemyBackground.png"), 0, 0, 197, 22, 0.25);
     var barForegroundTexture = new Texture(AM.getAsset("./images/healthBarEnemyForeground.png"), 0, 0, 203, 25, 0.25);
     var healthBarTexture = new Texture(AM.getAsset("./images/healthBar.png"), 0, 0, 208, 16, 0.25);
-
 
     var enemyStatusBar = new EnemyStatusBar(enemy.position.x, enemy.position.y, enemy.position.x, enemy.position.y);
     enemyStatusBar.addSprite(new Sprite(gameEngine, barBackgroundTexture, 0, 0));

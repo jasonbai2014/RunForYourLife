@@ -223,7 +223,7 @@ Being.prototype.update = function(health, energy, speed, gameEngine, x, y, width
     if (this.currentHealth < this.health)
         this.currentHealth += 0.005;
     if (this.currentEnergy < this.energy)
-        this.currentEnergy += 0.01;
+        this.currentEnergy += 0.025;
     Entity.prototype.update.call(this, gameEngine, x, y, width, height);
 }
 
@@ -240,7 +240,7 @@ Being.prototype.dealDamage = function(damage) {
 
         window.setTimeout(function(){
             that.beenDamaged = false;
-        }, 500);  
+        }, 300);  
     }
 }
 
@@ -283,8 +283,9 @@ Weapon.prototype.applyDamage = function(other) {
 /*********************************************/
 /****************** I T E M ******************/
 /*********************************************/
-function Item(game, x, y, width, height) {
+function Item(game, x, y, width, height, expires) {
     Entity.call(this, game, x, y, width, height);
+    this.expires = expires;
 }
 
 Item.prototype = new Entity();
@@ -294,14 +295,16 @@ Item.prototype.update = function() {};
 Item.prototype.collide = function() {};
 
 
-function HealthPotion(game, x, y, width, height) {
+function HealthPotion(game, x, y, width, height, expires=true) {
     this.healthPoint = 200;
     var that = this;
-    Item.call(this, game, x, y, width, height);
+    Item.call(this, game, x, y, width, height, expires);
 
-    window.setTimeout(function(){
-        that.removeFromWorld = true;
-    }, 6000);
+    if (this.expires) {
+        window.setTimeout(function(){
+            that.removeFromWorld = true;
+        }, 6000);
+    }
 };
 
 HealthPotion.prototype = new Item();

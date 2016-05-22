@@ -73,15 +73,19 @@ function startGame() {
 
     /* SECRET AREA */
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture,  -400, 360, floorTexture.width *  1, floorTexture.height * 1, 0, false, 0, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture,  -480, 550, floorTexture.width *  1, floorTexture.height * 1, 0, false, 0, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, -1500, 600, floorTexture.width * 20, floorTexture.height * 1, 0, false, 0, false));         // Platform nearest floor.
-    
+    gameEngine.addEntity(new HealthPotion(gameEngine, -1490, 590, 24, 24, false));
+
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2300, 350, floorTexture.width *  3, floorTexture.height * 5, 0, false, 0, false));
-    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 1500, 200, floorTexture.width * 10, floorTexture.height * 1, 0, false, 0, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 1500, 200, floorTexture.width * 10, floorTexture.height * 1, 75, false, 0, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 1460,  70, floorTexture.width * 39, floorTexture.height * 1, 0, false, 0, false));
+
 
 
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2600,  70, floorTexture.width *  1, floorTexture.height * 6,  0, false, 0, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2600, 220, floorTexture.width *  2, floorTexture.height * 1,  0, false, 0, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2800,-100, floorTexture.width *  1, floorTexture.height * 8,  0, false, 50, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3000, 200, floorTexture.width * 12, floorTexture.height * 10, 0, false, 0, false));
 
 

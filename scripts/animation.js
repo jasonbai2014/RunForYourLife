@@ -139,17 +139,15 @@ Knife.prototype.collide = function(other) {
     if (other instanceof Being && !other.isEnabled)
         return;
 
-    if (other instanceof Terrain) {
+    if (other instanceof Terrain && !this.isDisabled) {
         this.stuckTo = other;
         this.speed = 0;
         this.body.gravityEnabled = false;
         this.currentAnimation = this.stuckAnimation;
         this.isDisabled = true;
 
-        if (this.movingToRight) {
-            this.position.x = other.position.x - 5;
-        } else {
-            this.position.x = other.position.x + other.width - 20;
+        if (!this.movingToRight) {
+            this.position.x -= 18;
         }
 
     } else if (!this.isDisabled && ((this.owner === "naruto" && other instanceof Enemy)
@@ -164,7 +162,7 @@ Knife.prototype.collide = function(other) {
         this.isHitEnemy = true;
 
         /* Knife has a chance to knock down an enemy. */
-        if (Math.floor(Math.random() * 4) === 3) {
+        if (Math.floor(Math.random() * 6) === 5) {
             other.isHit = true;
         }
 
@@ -367,7 +365,7 @@ function Naruto(gameEngine, spriteSheet, x, y) {
     this.walkAnimation  = new Animation(spriteSheet, 16, 165, 40, 60, 6, 0.30, 6, true, 1.5);
     this.teleportAnimation = new Animation(spriteSheet, 19, 405, 70, 61, 7, 0.20, 7, false, 1.5);
     this.attackAnimation = new Animation(spriteSheet, 615, 272, 60, 60, 3, 0.10, 3, true, 1.5);
-    this.throwKnifeAnimation = new Animation(spriteSheet, 385, 51, 60, 60, 3, 0.10, 3, false, 1.5);
+    this.throwKnifeAnimation = new Animation(spriteSheet, 385, 51, 60, 60, 3, 0.13, 3, false, 1.5);
     this.specialAttackAnimation = new Animation(spriteSheet, 15, 466, 125, 101, 8, 0.20, 24, false, 1.5);
     // the character stays still initially
     this.currentAnimation = this.idleAnimation;
@@ -626,6 +624,7 @@ Naruto.prototype.throwKnife = function() {
     if (this.currentAnimation.isDone()) {
         this.currentAnimation.elapsedTime = 0;
         this.isThrowing = this.controller.pressedKeys[79];
+        
         var startX = this.movingForward ? this.position.x + this.width + 20 : this.position.x - this.width;
         this.game.addEntity(new Knife(gameEngine, AM.getAsset("./images/naruto.png"), "naruto", 15, this.movingForward,
             startX, this.position.y + this.height - 50));
