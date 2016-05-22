@@ -29,6 +29,7 @@ function GameEngine() {
     this.idleEnemies = [];
     this.activeEnemies = [];
     this.scenery = [];
+    this.music = [];
     this.gui = [];
     this.ctx = null;
     this.surfaceWidth = null;
@@ -41,6 +42,7 @@ function GameEngine() {
     this.alpha = 0.0;
     this.alpha2 = 0.0;
     this.playing = false;
+    this.endBattle = false;
 }
 
 GameEngine.prototype.init = function(ctx) {
@@ -66,17 +68,10 @@ GameEngine.prototype.start = function() {
     this.ctx.font = "20px Arial";
     this.ctx.fillText("press spacebar to continue...", this.camera.position.x + 5, this.camera.position.y + 100);
 
-    document.addEventListener("keydown", this.startGame, false);
-
-    // (function gameLoop() {
-    //     that.loop();
-    //     requestAnimFrame(gameLoop, that.ctx.canvas);
-    // })();
-
-
     var that = this;
     this.startGame = function(event) {
         if (event.keyCode === 32 && !that.isPlaying) {
+            AM.getSound("./sounds/rainforest.mp3").play();
             (function gameLoop() {
                 that.loop();
                 requestAnimFrame(gameLoop, that.ctx.canvas);
@@ -109,9 +104,6 @@ GameEngine.prototype.addEnemy = function(enemy) {
     enemy.statusBar = enemyStatusBar;
     this.idleEnemies.push(enemy);
     this.addUserInterface(enemyStatusBar);
-
-    // console.log(enemy);
-    // console.log(enemyStatusBar);
 }
 
 GameEngine.prototype.addEntity = function(entity) {
@@ -124,6 +116,10 @@ GameEngine.prototype.addScenery = function(sprite) {
 
 GameEngine.prototype.addUserInterface = function(interface) {
     this.gui.push(interface);
+}
+
+GameEngine.prototype.addSound = function(sound) {
+    this.music.push(sound);
 }
 
 GameEngine.prototype.draw = function() {
@@ -213,9 +209,16 @@ GameEngine.prototype.update = function() {
     if (this.players.length === 0) {
         this.isGameOver = true;
     }
-    if (this.idleEnemies.length === 0 && 
-        this.activeEnemies.length === 0) {
-        this.isWinner = true;
+
+    if (this.idleEnemies.length === 0) {
+        if (!this.endBattle) {
+            AM.getSound("./sounds/volatile.mp3").play();
+            this.endBattle = true;
+        }
+
+        if (this.activeEnemies.length === 0) {
+            this.isWinner = true;
+        }
     }
 
     for (var i = 0; i < this.players.length; i++) {
@@ -324,11 +327,17 @@ GameEngine.prototype.checkCollisions = function() {
     }
 };
 
+// GameEngine.prototype.playAudio = function() {
+//     for (var i = 0; i < this.music; i++) {
+//         this.music[i].play();
+//     }
+// };
+
 GameEngine.prototype.loop = function() {
     this.clockTick = this.timer.tick();
     this.update();
     this.checkCollisions();
-    this.collided = [];
+    // this.playAudio();
     this.draw();
 }
 

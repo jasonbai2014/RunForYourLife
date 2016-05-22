@@ -44,6 +44,11 @@ AssetManager.prototype.downloadSound = function(id, path, soundsCallback) {
             if (that.isDone()) {
                 soundsCallback();
             }
+        },
+        onfinish: function() {
+            if (id === "rainforest") {
+                soundManager.play(id);
+            }
         }
     });
 }

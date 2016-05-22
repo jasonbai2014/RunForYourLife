@@ -11,6 +11,9 @@ function loadAssets() {
     AM.queueSound("landed", "./sounds/landed.mp3");
     AM.queueSound("rasengan", "./sounds/rasengan.mp3");
     AM.queueSound("fire_ball", "./sounds/fire_jutsu.mp3");
+    AM.queueSound("rainforest", "./sounds/rainforest.mp3");
+    AM.queueSound("battle", "./sounds/volatile.mp3");
+
     AM.queueDownload("./images/naruto.png");
     AM.queueDownload("./images/enemy.png");
     AM.queueDownload("./images/boss.png");
@@ -34,6 +37,8 @@ function startGame() {
 	var ctx = canvas.getContext("2d");
 
 	gameEngine.init(ctx);
+
+    // gameEngine.addSound(AM.getSound("./sounds/rainforest.mp3"));
 
     var player = new Player(new Naruto(gameEngine, AM.getAsset("./images/naruto.png"), 40, 450));
     gameEngine.addPlayer(player);
@@ -61,8 +66,8 @@ function startGame() {
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2300, 500, floorTexture.width * 150, floorTexture.height * 4, 0, false, 0, false));    // Floor
     
     /* CAGE */
-    gameEngine.addEntity(new Terrain(gameEngine, cageTexture,  30, 350, floorTexture.width * 4, floorTexture.height * 1,  0, false, 0, false));
-    gameEngine.addEntity(new Terrain(gameEngine, cageTexture,  30, 470, floorTexture.width * 4, floorTexture.height * 1,  0, false, 0, false));         // Highest Platform.
+    gameEngine.addEntity(new Terrain(gameEngine, cageTexture,  30, 350, floorTexture.width * 5, floorTexture.height * 1,  0, false, 0, false));
+    gameEngine.addEntity(new Terrain(gameEngine, cageTexture,  30, 470, floorTexture.width * 5, floorTexture.height * 1,  0, false, 0, false));         // Highest Platform.
     gameEngine.addEntity(new Terrain(gameEngine, cageTexture,  30, 350, floorTexture.width * 1, floorTexture.height * 5,  0, false, 0, false));
     gameEngine.addEntity(new Terrain(gameEngine, cageTexture, 150, 350, floorTexture.width * 1, floorTexture.height * 5,  0, false, 0, false));
 
