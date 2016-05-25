@@ -41,11 +41,11 @@ function startGame() {
         if (gameEngine.isMuted) {
             soundManager.mute();
             muteBtn.childNodes[1].className = "glyphicon glyphicon-volume-off";
-            muteBtn.childNodes[2].nodeValue = " Unmute";
+            muteBtn.childNodes[2].innerHTML = " Unmute";
         } else {
             soundManager.unmute();
             muteBtn.childNodes[1].className = "glyphicon glyphicon-volume-up";
-            muteBtn.childNodes[2].nodeValue = " Mute";
+            muteBtn.childNodes[2].innerHTML = " Mute";
         }
 
         event.preventDefault();
@@ -57,32 +57,20 @@ function startGame() {
     gameEngine.addPlayer(player);
 
 
-// <<<<<<< HEAD
-//     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 300, 490, 50, 25, 22));
-//     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 1200, 490, 50, 25, 22));
-//     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 2800, 490, 50, 25, 22));
-//     // gameEngine.addEnemy(new Boss(gameEngine, AM.getAsset("./images/boss.png"), 3800, 300, 900, 200, 30));
-// =======
     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 400, 430, 50, 25, 22));
     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 1200, 430, 50, 25, 22));
     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 2800, 430, 50, 25, 22));
-    // gameEngine.addEnemy(new Boss(gameEngine, AM.getAsset("./images/boss.png"), 3800, 300, 900, 200, 30));
 
     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 3910, 430, 50, 25, 22));
     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 3930, 430, 50, 25, 22));
     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 3970, 430, 50, 25, 22));
     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 3990, 430, 50, 25, 22));
-// >>>>>>> gh-pages
-
-    // gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 4750, -550, 50, 25, 22));
-    // gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 1300, 300, 50, 25, 22));
     
 
     var floorTexture = new Texture(AM.getAsset("./images/tileSheet.jpg"), 0, 2, 30, 30, 1.0);
     var cageTexture = new Texture(AM.getAsset("./images/tileSheet.jpg"), 1, 8, 30, 30, 1.0);
 
     var backgroundTexture = new Texture(AM.getAsset("./images/background.jpg"), 0, 0, 9500, 3000, 1.0);
-    var winTexture = new Texture(AM.getAsset("./images/win.png"), 0, 0, 400, 300, 1.0);
 
     /* FLOOR */                                            // X    Y     NO. OF TILES WIDTH      NO. OF TILES HEIGHT
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 0, 500, floorTexture.width * 60, floorTexture.height * 6, 0, false, 0, false));    // Floor
@@ -123,25 +111,13 @@ function startGame() {
     /* UPPER LEVEL */
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3000, -500, floorTexture.width * 54, floorTexture.height * 1, 0, false, 0, false));
 
-// <<<<<<< HEAD
-//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 4000, -1200, floorTexture.width * 1, floorTexture.height * 20, 0, false, 50, false));
-//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3900, -1150, floorTexture.width * 1, floorTexture.height * 18, 0, false, 45, false));
-//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3830, -1130, floorTexture.width * 1, floorTexture.height * 18, 0, false, 43, false));
-//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3700, -1200, floorTexture.width * 1, floorTexture.height * 20, 0, false, 50, false));
 
-//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3650, -1210, floorTexture.width * 1, floorTexture.height * 20, 0, false, 52, false));
-//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3570, -1140, floorTexture.width * 1, floorTexture.height * 19, 0, false, 45, false));
-//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3400, -1160, floorTexture.width * 1, floorTexture.height * 18, 0, false, 45, false));
-
-
-
-
-// =======
     /* MOVING PILLARS */
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 4000, -1200, floorTexture.width * 1, floorTexture.height * 20, 0, false, 50, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3900, -1150, floorTexture.width * 1, floorTexture.height * 18, 0, false, 46, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3790, -1130, floorTexture.width * 1, floorTexture.height * 18, 0, false, 43, false));
     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 3850, -570, 50, 25, 22));
+    
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3680, -1200, floorTexture.width * 1, floorTexture.height * 20, 0, false, 50, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3590, -1210, floorTexture.width * 1, floorTexture.height * 20, 0, false, 52, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3470, -1170, floorTexture.width * 1, floorTexture.height * 19, 0, false, 46, false));
@@ -156,12 +132,12 @@ function startGame() {
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2550, -1000, floorTexture.width * 2, floorTexture.height * 1, 110, false, 0, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2000, -950, floorTexture.width * 4, floorTexture.height * 1, 100, false, 100, true));
 
-    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, -300, -1160, floorTexture.width * 60 , floorTexture.height * 4, 0, false, 0, false));
-    gameEngine.addEnemy(new Boss(gameEngine, AM.getAsset("./images/boss.png"), -270, -1200, 900, 200, 30));
-// >>>>>>> gh-pages
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, -300, -1160, floorTexture.width * 60 , floorTexture.height * 3, 0, false, 0, false));
+    gameEngine.addEnemy(new Boss(gameEngine, AM.getAsset("./images/boss.png"), -270, -1240, 350, 200, 30));
 
 
     gameEngine.addScenery(new Sprite(gameEngine, backgroundTexture, -2800, -2000));
+
 
     var statusBarForegroundTexture = new Texture(AM.getAsset("./images/statusBarForeground.png"), 0, 0, 300, 125, 1.0);
     var statusBarBackgroundTexture = new Texture(AM.getAsset("./images/statusBarBackground.png"), 0, 0, 300, 125, 1.0);

@@ -175,7 +175,6 @@ GameEngine.prototype.draw = function() {
         this.ctx.fillStyle = "rgba(255,0,0," + this.alpha2 + ")";
         this.ctx.textAlign = "center";
         this.ctx.fillText("YOU DIED", this.camera.position.x, this.camera.position.y);
-
     } else if (this.isWinner) {
         if (this.alpha < 1)
             this.alpha += 0.01;
@@ -189,8 +188,13 @@ GameEngine.prototype.draw = function() {
         this.ctx.fillStyle = "rgba(255,255,0," + this.alpha + ")";
         this.ctx.textAlign = "center";
         this.ctx.fillText("CONGRATULATIONS", this.camera.position.x, this.camera.position.y);
+    } else {
+        this.ctx.font = "12px Arial";
+        this.ctx.fillStyle = "rgba(255,255,0," + 1.0 + ")";
+        this.ctx.textAlign = "center";
+        this.ctx.fillText("patience..", 4860, 600);
     }
-
+    
     this.ctx.restore();
 }
 

@@ -1,9 +1,13 @@
 * {
-    font-size: 16px;
+    font-size: 1.2vw;
 }
 
 html {
     margin:20px;
+}
+
+canvas {
+    border: 5px solid #000000;
 }
 
 div.row {
@@ -32,6 +36,10 @@ span.controls {
     display: block;
     font-weight: bolder;
     margin: 10px;
+}
+
+button {
+    font-size: 1.2em;
 }
 
 ul.control-list {
