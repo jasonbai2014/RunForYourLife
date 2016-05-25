@@ -221,7 +221,11 @@ Being.prototype.constructor = Being;
 
 Being.prototype.update = function(health, energy, speed, gameEngine, x, y, width, height) {
     if (this.currentHealth < this.health)
-        this.currentHealth += 0.005;
+        if (this instanceof Naruto) {
+            this.currentHealth += 0.025;
+        } else {
+            this.currentHealth += 0.01;
+        }
     if (this.currentEnergy < this.energy)
         this.currentEnergy += 0.025;
     Entity.prototype.update.call(this, gameEngine, x, y, width, height);

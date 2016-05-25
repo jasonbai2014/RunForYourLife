@@ -3,13 +3,30 @@
  */
 function Player(entity, statusBar=null) {
     this.character = entity;
-	this.character.controller = new Controller();
+	this.character.controller = new Controller(this);
     this.statusBar = statusBar;
+    this.noclip = false;
 }
+
 // Player.prototype = new Being(100, 50, 0);
 // Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
+    if (this.noclip) {
+
+        if (this.character.controller.pressedKeys[65]) {
+            this.character.position.x -= 10;
+        } else if (this.character.controller.pressedKeys[68]) {
+            this.character.position.x += 10;
+        }
+
+        if (this.character.controller.pressedKeys[87]) {
+            this.character.position.y -= 10;
+        } else if (this.character.controller.pressedKeys[83]) {
+            this.character.position.y += 10;
+        }
+        return;
+    }
     this.handleKeys();
 
     this.character.update();
@@ -32,7 +49,7 @@ Player.prototype.setStatusBar = function (statusBar) {
  * This sets up the controls for the player.
  */
 Player.prototype.handleKeys = function() {
-   if (this.character.controller.pressedKeys[65] || this.character.controller.pressedKeys[68]) {
+    if (this.character.controller.pressedKeys[65] || this.character.controller.pressedKeys[68]) {
         this.character.walkOrRun();
     }
 
@@ -54,7 +71,8 @@ Player.prototype.handleKeys = function() {
 /*
  * This sets up keyboard listeners for the player.
  */
-function Controller() {
+function Controller(player) {
+    this.player = player;
 	this.pressedKeys = {};
 	this.enabled = true;
 
@@ -66,6 +84,14 @@ function Controller() {
             that.keyAPressedTime = gameEngine.timer.gameTime;
         } else if (event.keyCode == 68) {
             that.keyDPressedTime = gameEngine.timer.gameTime;
+        } else if(event.keyCode == 192) {
+
+            that.player.noclip ^= true;
+            if (that.player.noclip) {
+                this.character.being.isEnabled = false;
+            } else {
+                this.character.being.isEnabled = true;
+            }
         }
 
         event.preventDefault();

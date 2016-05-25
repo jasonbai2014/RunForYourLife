@@ -147,7 +147,7 @@ Knife.prototype.collide = function(other) {
         this.isDisabled = true;
 
         if (!this.movingToRight) {
-            this.position.x -= 18;
+            this.position.x -= 20;
         }
 
     } else if (!this.isDisabled && ((this.owner === "naruto" && other instanceof Enemy)
@@ -161,10 +161,10 @@ Knife.prototype.collide = function(other) {
         AM.getSound("./sounds/hit_by_knife.wav").play();
         this.isHitEnemy = true;
 
-        /* Knife has a chance to knock down an enemy. */
-        if (Math.floor(Math.random() * 6) === 5) {
-            other.isHit = true;
-        }
+        // /* Knife has a chance to knock down an enemy. */
+        // if (Math.floor(Math.random() * 6) === 5) {
+        //     other.isHit = true;
+        // }
 
     	this.applyDamage(other);
     };
@@ -207,7 +207,7 @@ ExplosiveKnife.prototype.draw = function(ctx) {
 
 function Rasengan(gameEngine, spriteSheet, movingToRight, x, y) {
     this.rasenganAnimation = new Animation(spriteSheet, 460, 865, 100 ,76, 4, 0.2, 4, true, 1.5);
-    Weapon.call(this, "naruto", 25, gameEngine, x, y,
+    Weapon.call(this, "naruto", 100, gameEngine, x, y,
         this.rasenganAnimation.frameWidth, this.rasenganAnimation.frameHeight);
 
     this.speed = 600;
@@ -267,7 +267,7 @@ Rasengan.prototype.collide = function(other) {
 
 function FireBall(gameEngine, spriteSheet, movingToRight, x, y) {
     this.fireBallAnimation = new Animation(spriteSheet, 21, 843, 160, 118, 4, 0.3, 4, true, 1);
-    Weapon.call(this, "enemy", 50, gameEngine, x, y, this.fireBallAnimation.frameWidth,
+    Weapon.call(this, "enemy", 100, gameEngine, x, y, this.fireBallAnimation.frameWidth,
         this.fireBallAnimation.frameHeight);
 
     this.speed = 500;
@@ -352,6 +352,10 @@ Fist.prototype.collide = function(other) {
 		this.isDisabled = true;
         this.isHitEnemy = true;
         this.applyDamage(other);
+
+        window.setTimeout(function(){
+            AM.getSound("./sounds/punch.wav").play();
+        }, 100);
 	}
 };
 
@@ -472,9 +476,7 @@ Naruto.prototype.attack = function() {
     	var x = this.movingForward ? this.position.x + this.width + 15 : this.position.x - 20;
     	this.game.addEntity(new Fist(gameEngine, "naruto", x, this.position.y + this.height / 2 + 30));
 
-        window.setTimeout(function(){
-            AM.getSound("./sounds/punch.wav").play();
-        }, 100);
+        
     }
 };
 
@@ -626,7 +628,7 @@ Naruto.prototype.throwKnife = function() {
         this.isThrowing = this.controller.pressedKeys[79];
         
         var startX = this.movingForward ? this.position.x + this.width + 20 : this.position.x - this.width;
-        this.game.addEntity(new Knife(gameEngine, AM.getAsset("./images/naruto.png"), "naruto", 15, this.movingForward,
+        this.game.addEntity(new Knife(gameEngine, AM.getAsset("./images/naruto.png"), "naruto", 10, this.movingForward,
             startX, this.position.y + this.height - 50));
         AM.getSound("./sounds/throw_knife.wav").play();
     }
@@ -775,7 +777,7 @@ Enemy.prototype.throwKnife = function() {
         this.isThrowingKnife = false;
 
         var startX = this.movingToRight ? this.position.x + this.width + 5 : this.position.x - this.width;
-        this.game.addEntity(new Knife(this.game, AM.getAsset("./images/naruto.png"), "enemy", 40, this.movingToRight,
+        this.game.addEntity(new Knife(this.game, AM.getAsset("./images/naruto.png"), "enemy", 20, this.movingToRight,
             startX, this.position.y + this.height - 50));
         AM.getSound("./sounds/throw_knife.wav").play();
     }
@@ -946,7 +948,7 @@ Boss.prototype.throwKnife = function() {
         this.isThrowingKnife = false;
 
         var startX = this.movingToRight ? this.position.x + this.width + 5 : this.position.x - this.width;
-        this.game.addEntity(new ExplosiveKnife(this.game, AM.getAsset("./images/boss.png"), "enemy", 20, this.movingToRight,
+        this.game.addEntity(new ExplosiveKnife(this.game, AM.getAsset("./images/boss.png"), "enemy", 35, this.movingToRight,
             startX, this.position.y + this.height - 50));
         AM.getSound("./sounds/throw_knife.wav").play();
     }
@@ -978,7 +980,6 @@ Boss.prototype.specialAttack = function() {
 
 Boss.prototype.idle = function() {
     this.specialAttacking = false;
-    this.isHit = false;
     Enemy.prototype.idle.call(this);
 }
 
@@ -1060,24 +1061,18 @@ BossAI.prototype.decideAction = function() {
     this.enemy.movingToRight = (distance.x > 0);
     var moving = this.track(distance.x, distance.y);
 
-    if (this.enemy.specialAttackCoolDown > 0) {
-        this.enemy.specialAttackCoolDown--;
-    }
-
     if (((!moving && !this.enemy.isTeleporting) || this.enemy.specialAttacking) && (!this.enemy.isHit && !this.enemy.isGettingUp)) {
         if ((this.enemy.specialAttackCoolDown === 0 && this.enemy.currentEnergy > 50) || this.enemy.specialAttacking) {
             this.enemy.specialAttack();
-            return;
         }
-    }
-
-    if (this.enemy.specialAttacking && this.enemy.isHit) {
-        this.enemy.specialAttack();
-        return;
     }
 
     if (!this.enemy.specialAttacking || (this.enemy.isHit || this.enemy.isGettingUp)) {
         EnemyAI.prototype.decideAction.call(this);
+    }
+
+    if (this.enemy.specialAttackCoolDown > 0) {
+        this.enemy.specialAttackCoolDown--;
     }
 }
 

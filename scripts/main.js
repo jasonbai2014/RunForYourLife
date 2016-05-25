@@ -19,7 +19,6 @@ function loadAssets() {
     AM.queueDownload("./images/boss.png");
     AM.queueDownload("./images/tileSheet.jpg");
     AM.queueDownload("./images/background.jpg");
-    AM.queueDownload("./images/win.png");
     AM.queueDownload("./images/statusBarBackground.png");
     AM.queueDownload("./images/statusBarForeground.png");
     AM.queueDownload("./images/healthBarEnemyForeground.png");
@@ -35,35 +34,59 @@ function loadAssets() {
 function startGame() {
 	var canvas = document.getElementById("gameWorld");
 	var ctx = canvas.getContext("2d");
+    var muteBtn = document.getElementById("mute-btn");
+    muteBtn.addEventListener("click", function(event) {
+        gameEngine.isMuted = !gameEngine.isMuted;
+
+        if (gameEngine.isMuted) {
+            soundManager.mute();
+            muteBtn.childNodes[1].className = "glyphicon glyphicon-volume-off";
+            muteBtn.childNodes[2].nodeValue = " Unmute";
+        } else {
+            soundManager.unmute();
+            muteBtn.childNodes[1].className = "glyphicon glyphicon-volume-up";
+            muteBtn.childNodes[2].nodeValue = " Mute";
+        }
+
+        event.preventDefault();
+    }, false);
 
 	gameEngine.init(ctx);
-
-    // gameEngine.addSound(AM.getSound("./sounds/rainforest.mp3"));
 
     var player = new Player(new Naruto(gameEngine, AM.getAsset("./images/naruto.png"), 40, 450));
     gameEngine.addPlayer(player);
 
 
-    gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 300, 490, 50, 25, 22));
-    gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 1200, 490, 50, 25, 22));
-    gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 2800, 490, 50, 25, 22));
-    gameEngine.addEnemy(new Boss(gameEngine, AM.getAsset("./images/boss.png"), 3800, 300, 500, 200, 30));
+// <<<<<<< HEAD
+//     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 300, 490, 50, 25, 22));
+//     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 1200, 490, 50, 25, 22));
+//     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 2800, 490, 50, 25, 22));
+//     // gameEngine.addEnemy(new Boss(gameEngine, AM.getAsset("./images/boss.png"), 3800, 300, 900, 200, 30));
+// =======
+    gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 400, 430, 50, 25, 22));
+    gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 1200, 430, 50, 25, 22));
+    gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 2800, 430, 50, 25, 22));
+    // gameEngine.addEnemy(new Boss(gameEngine, AM.getAsset("./images/boss.png"), 3800, 300, 900, 200, 30));
 
-    // gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 1200, 100, 50, 25, 22));
-    // gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 100, 300, 50, 25, 22));
-    // gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 900, 300, 50, 25, 22));
+    gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 3910, 430, 50, 25, 22));
+    gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 3930, 430, 50, 25, 22));
+    gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 3970, 430, 50, 25, 22));
+    gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 3990, 430, 50, 25, 22));
+// >>>>>>> gh-pages
+
+    // gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 4750, -550, 50, 25, 22));
     // gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 1300, 300, 50, 25, 22));
     
 
     var floorTexture = new Texture(AM.getAsset("./images/tileSheet.jpg"), 0, 2, 30, 30, 1.0);
     var cageTexture = new Texture(AM.getAsset("./images/tileSheet.jpg"), 1, 8, 30, 30, 1.0);
 
-    var backgroundTexture = new Texture(AM.getAsset("./images/background.jpg"), 0, 0, 11000, 600, 1.0);
+    var backgroundTexture = new Texture(AM.getAsset("./images/background.jpg"), 0, 0, 9500, 3000, 1.0);
     var winTexture = new Texture(AM.getAsset("./images/win.png"), 0, 0, 400, 300, 1.0);
 
     /* FLOOR */                                            // X    Y     NO. OF TILES WIDTH      NO. OF TILES HEIGHT
-    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 0, 500, floorTexture.width * 60, floorTexture.height * 4, 0, false, 0, false));    // Floor
-    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2300, 500, floorTexture.width * 150, floorTexture.height * 4, 0, false, 0, false));    // Floor
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 0, 500, floorTexture.width * 60, floorTexture.height * 6, 0, false, 0, false));    // Floor
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2300, 500, floorTexture.width * 80, floorTexture.height * 6, 0, false, 0, false));    // Floor
     
     /* CAGE */
     gameEngine.addEntity(new Terrain(gameEngine, cageTexture,  30, 350, floorTexture.width * 5, floorTexture.height * 1,  0, false, 0, false));
@@ -83,24 +106,67 @@ function startGame() {
     gameEngine.addEntity(new HealthPotion(gameEngine, -1490, 590, 24, 24, false));
 
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2300, 350, floorTexture.width *  3, floorTexture.height * 5, 0, false, 0, false));
-    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 1500, 200, floorTexture.width * 10, floorTexture.height * 1, 75, false, 0, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 1400, 200, floorTexture.width * 10, floorTexture.height * 1, 100, true, 0, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 1460,  70, floorTexture.width * 39, floorTexture.height * 1, 0, false, 0, false));
-
 
 
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2600,  70, floorTexture.width *  1, floorTexture.height * 6,  0, false, 0, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2600, 220, floorTexture.width *  2, floorTexture.height * 1,  0, false, 0, false));
-    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2800,-100, floorTexture.width *  1, floorTexture.height * 8,  0, false, 50, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2800,-200, floorTexture.width *  1, floorTexture.height * 12,  0, false, 50, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3000, 200, floorTexture.width * 12, floorTexture.height * 10, 0, false, 0, false));
 
+    /* TRANSPORT TO UPPER LEVEL */
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 4800, 500, floorTexture.width * 4, floorTexture.height * 1, 0, false, 650, true));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 5200, -900, floorTexture.width * 2, floorTexture.height * 1, 0, false, 0, false));    
+    gameEngine.addEntity(new HealthPotion(gameEngine, 5220, -900, 24, 24, false));
+
+    /* UPPER LEVEL */
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3000, -500, floorTexture.width * 54, floorTexture.height * 1, 0, false, 0, false));
+
+// <<<<<<< HEAD
+//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 4000, -1200, floorTexture.width * 1, floorTexture.height * 20, 0, false, 50, false));
+//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3900, -1150, floorTexture.width * 1, floorTexture.height * 18, 0, false, 45, false));
+//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3830, -1130, floorTexture.width * 1, floorTexture.height * 18, 0, false, 43, false));
+//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3700, -1200, floorTexture.width * 1, floorTexture.height * 20, 0, false, 50, false));
+
+//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3650, -1210, floorTexture.width * 1, floorTexture.height * 20, 0, false, 52, false));
+//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3570, -1140, floorTexture.width * 1, floorTexture.height * 19, 0, false, 45, false));
+//     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3400, -1160, floorTexture.width * 1, floorTexture.height * 18, 0, false, 45, false));
 
 
-    gameEngine.addScenery(new Sprite(gameEngine, backgroundTexture, -2500, 0));
+
+
+// =======
+    /* MOVING PILLARS */
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 4000, -1200, floorTexture.width * 1, floorTexture.height * 20, 0, false, 50, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3900, -1150, floorTexture.width * 1, floorTexture.height * 18, 0, false, 46, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3790, -1130, floorTexture.width * 1, floorTexture.height * 18, 0, false, 43, false));
+    gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 3850, -570, 50, 25, 22));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3680, -1200, floorTexture.width * 1, floorTexture.height * 20, 0, false, 50, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3590, -1210, floorTexture.width * 1, floorTexture.height * 20, 0, false, 52, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3470, -1170, floorTexture.width * 1, floorTexture.height * 19, 0, false, 46, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3380, -1160, floorTexture.width * 1, floorTexture.height * 18, 0, false, 47, false));
+    gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 3300, -570, 50, 25, 22));
+
+    /* HORIZONTAL PLATFORMS */
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2500, -600, floorTexture.width * 4, floorTexture.height * 1, 100, true, 0, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3100, -700, floorTexture.width * 3, floorTexture.height * 1, 100, false, 0, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2600, -820, floorTexture.width * 3, floorTexture.height * 1, 80, false, 0, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2900, -960, floorTexture.width * 4, floorTexture.height * 1, 110, true, 0, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2550, -1000, floorTexture.width * 2, floorTexture.height * 1, 110, false, 0, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2000, -950, floorTexture.width * 4, floorTexture.height * 1, 100, false, 100, true));
+
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, -300, -1160, floorTexture.width * 60 , floorTexture.height * 4, 0, false, 0, false));
+    gameEngine.addEnemy(new Boss(gameEngine, AM.getAsset("./images/boss.png"), -270, -1200, 900, 200, 30));
+// >>>>>>> gh-pages
+
+
+    gameEngine.addScenery(new Sprite(gameEngine, backgroundTexture, -2800, -2000));
 
     var statusBarForegroundTexture = new Texture(AM.getAsset("./images/statusBarForeground.png"), 0, 0, 300, 125, 1.0);
     var statusBarBackgroundTexture = new Texture(AM.getAsset("./images/statusBarBackground.png"), 0, 0, 300, 125, 1.0);
     var statusBarIconTexture = new Texture(AM.getAsset("./images/naruto_headshots.png"), 0, 0, 95, 100, 0.8);
-    var healthBarTexture = new Texture(AM.getAsset("./images/healthBar.png"), 0, 0, 208, 16, 1.0);
+    var healthBarTexture = new Texture(AM.getAsset("./images/healthBar.png"), 0, 0, 195, 16, 1.0);
     var energyBarTexture = new Texture(AM.getAsset("./images/energyBar.png"), 0, 0, 187, 12, 1.0);    
 
     var playerStatus = new PlayerStatusBar(0, 100, 5, 0);

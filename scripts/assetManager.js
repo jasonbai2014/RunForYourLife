@@ -41,6 +41,7 @@ AssetManager.prototype.downloadSound = function(id, path, soundsCallback) {
         onload: function() {
             console.log(this.url + ' is loaded');
             that.successCount += 1;
+
             if (that.isDone()) {
                 soundsCallback();
             }
@@ -49,7 +50,18 @@ AssetManager.prototype.downloadSound = function(id, path, soundsCallback) {
             if (id === "rainforest") {
                 soundManager.play(id);
             }
-        }
+        }, 
+        volume: 
+        function() {
+    		if (id === "foot_steps" || id === "throw_knife" || id === "hit_by_knife") {
+    			return 30;
+    		} else if (id === "teleport") {
+    			return 70;
+    		} else if (id === "attack") {
+    			return 10;
+    		}
+    		return 80;
+  		}()
     });
 }
 

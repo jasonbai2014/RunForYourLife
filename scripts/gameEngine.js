@@ -24,6 +24,7 @@ window.cancelRequestAnimFrame = (function() {
 /****************** E N G I N E ******************/
 /*************************************************/
 function GameEngine() {
+    this.isMuted = false;
     this.entities = [];
     this.players = [];
     this.idleEnemies = [];
@@ -56,7 +57,6 @@ GameEngine.prototype.init = function(ctx) {
 
 GameEngine.prototype.start = function() {
     var that = this;
-
     this.ctx.font = "25px Arial";
     this.ctx.fillStyle = "rgba(255,255,0,1)";
     this.ctx.textAlign = "center";
@@ -123,17 +123,21 @@ GameEngine.prototype.addSound = function(sound) {
 }
 
 GameEngine.prototype.draw = function() {
-    this.ctx.clearRect(this.camera.position.x - this.surfaceWidth / 2, 0,
+    this.ctx.clearRect(this.camera.position.x - this.surfaceWidth / 2, this.camera.position.y - this.surfaceHeight / 2,
         this.surfaceWidth, this.surfaceHeight);
     this.ctx.save();
 
     for (var i = 0; i < this.scenery.length; i++) {
-        // if (!this.camera.clip(this.scenery[i]))
-        this.scenery[i].draw(this.ctx);
+        if (!this.camera.clip(this.scenery[i]))
+            this.scenery[i].draw(this.ctx);
     }
 
     for (var i = 0; i < this.activeEnemies.length; i++) {
         this.activeEnemies[i].draw(this.ctx);
+    }
+
+    for (var i = 0; i < this.idleEnemies.length; i++) {
+        this.idleEnemies[i].draw(this.ctx);
     }
 
     for (var i = 0; i < this.players.length; i++) {
@@ -230,8 +234,10 @@ GameEngine.prototype.update = function() {
     }
 
     for (var i = 0; i < this.idleEnemies.length; i++) {
-        if (!this.camera.clip(this.idleEnemies[i])) {
-            this.activeEnemies.push(this.idleEnemies.splice(i, 1)[0]);
+        for (var j = 0; j < this.players.length; j++) {
+            if (this.activateEnemy(this.idleEnemies[i], this.players[j])) {
+                this.activeEnemies.push(this.idleEnemies.splice(i, 1)[0]);
+            }
         }
     }
 
@@ -312,6 +318,15 @@ GameEngine.prototype.checkCollisions = function() {
         }
     }
 
+    for (var i = 0; i < this.idleEnemies.length; i++) {
+        for (var j = 1; j < this.entities.length; j++) {
+            if (this.entities[j] instanceof Weapon && this.idleEnemies[i].body.intersect(this.entities[j].body)) {
+                this.entities[j].collide(this.idleEnemies[i]);
+                this.activeEnemies.push(this.idleEnemies.splice(i, 1)[0]);
+            }
+        }
+    }
+
     /* Check entities against all other entities--not the same types. */
     for (var i = 0; i < this.entities.length - 1; i++) {
         for (var j = i + 1; j < this.entities.length; j++) {
@@ -327,17 +342,19 @@ GameEngine.prototype.checkCollisions = function() {
     }
 };
 
-// GameEngine.prototype.playAudio = function() {
-//     for (var i = 0; i < this.music; i++) {
-//         this.music[i].play();
-//     }
-// };
+GameEngine.prototype.activateEnemy = function(enemy, player) {
+    if ((Math.abs(enemy.position.x - player.character.position.x) < this.ctx.canvas.width / 4) 
+        && ((enemy.position.y > this.camera.position.y - this.ctx.canvas.height / 2) 
+                && (enemy.position.y < this.camera.position.y + this.ctx.canvas.height / 2))) {
+        return true;
+    }
+    return false;
+}
 
 GameEngine.prototype.loop = function() {
     this.clockTick = this.timer.tick();
     this.update();
     this.checkCollisions();
-    // this.playAudio();
     this.draw();
 }
 
@@ -394,6 +411,22 @@ Camera.prototype.update = function() {
         this.ctx.translate(-translateStep, 0);
         this.position.x = this.focus.position.x;
     }
+
+
+    if (this.focus.position.y > this.position.y + 60) {
+        this.position.y += 2;
+        this.ctx.translate(0, -2);
+    } else if (this.focus.position.y < this.position.y - 90) {
+        this.position.y -= 2;
+        this.ctx.translate(0, 2);
+    }
+
+    /* If the player gets off the screen re-center the player. */
+    translateStep = this.focus.position.y - this.position.y;
+    if (Math.abs(translateStep) > this.ctx.canvas.height / 2 - 40) {
+        this.ctx.translate(0, -translateStep);
+        this.position.y = this.focus.position.y;
+    }
 }
 
 /*
@@ -404,9 +437,9 @@ Camera.prototype.setFocus = function(entity) {
 }
 
 Camera.prototype.clip = function(entity) {
-    if (entity.position.x + entity.width < this.position.x - this.ctx.canvas.width / 2
-        || entity.position.x > this.position.x + this.ctx.canvas.width / 2) {
-        return true
+    if ((entity.position.x + entity.width < this.position.x - this.ctx.canvas.width / 2
+            || entity.position.x > this.position.x + this.ctx.canvas.width / 2)) {
+        return true;
     }
     return false;
 }
