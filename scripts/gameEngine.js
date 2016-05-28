@@ -57,6 +57,11 @@ GameEngine.prototype.init = function(ctx) {
 }
 
 GameEngine.prototype.start = function() {
+    // clear the loading UI
+    this.ctx.clearRect(this.camera.position.x - this.surfaceWidth / 2, this.camera.position.y - this.surfaceHeight / 2,
+        this.surfaceWidth, this.surfaceHeight);
+    this.ctx.save();
+
     var that = this;
     this.ctx.font = "25px Arial";
     this.ctx.fillStyle = "rgba(255,255,0,1)";
