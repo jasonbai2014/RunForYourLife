@@ -14,15 +14,24 @@ function Sprite(game, texture, x, y) {
     this.game = game;
     this.position = {x:x, y:y};
     this.texture = texture;
+    this.animation = null;
 };
 
+Sprite.prototype.setAnimation = function(animation) {
+    this.animation = animation;
+}
+
 Sprite.prototype.draw = function(ctx) {
-    ctx.drawImage(this.texture.tileSheet,
-        0, 0,  // source from sheet
-        this.texture.width, this.texture.height,
-        this.position.x, this.position.y,
-        this.texture.width * this.texture.scale,
-        this.texture.height * this.texture.scale);
+    if (this.animation) {
+        this.animation.drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y);
+    } else {
+        ctx.drawImage(this.texture.tileSheet,
+            0, 0,  // source from sheet
+            this.texture.width, this.texture.height,
+            this.position.x, this.position.y,
+            this.texture.width * this.texture.scale,
+            this.texture.height * this.texture.scale);
+    }
 };
 
 Sprite.prototype.drawOptions = function(ctx, offsetX, offsetY, widthAmount, heightAmount) {
@@ -207,7 +216,7 @@ ExplosiveKnife.prototype.draw = function(ctx) {
 
 function Rasengan(gameEngine, spriteSheet, movingToRight, x, y) {
     this.rasenganAnimation = new Animation(spriteSheet, 460, 865, 100 ,76, 4, 0.2, 4, true, 1.5);
-    Weapon.call(this, "naruto", 100, gameEngine, x, y,
+    Weapon.call(this, "naruto", 50, gameEngine, x, y,
         this.rasenganAnimation.frameWidth, this.rasenganAnimation.frameHeight);
 
     this.speed = 600;

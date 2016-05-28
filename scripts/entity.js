@@ -137,8 +137,15 @@ Terrain.prototype.update = function() {
         if (this.verticalMoveCounter == 0) {
             this.isMovingUp = !this.isMovingUp;
             this.verticalMoveCounter = this.movingRangeInY;
+
+            if (this === this.game.entities[this.game.entities.length - 1]) {
+                console.log("RANGE = 0");
+                this.movingRangeInY = 0;
+            }
         }
     }
+
+    
 };
 
 Terrain.prototype.draw = function(ctx) {

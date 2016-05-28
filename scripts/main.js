@@ -19,6 +19,7 @@ function loadAssets() {
     AM.queueDownload("./images/boss.png");
     AM.queueDownload("./images/tileSheet.jpg");
     AM.queueDownload("./images/background.jpg");
+    AM.queueDownload("./images/arrow.png");
     AM.queueDownload("./images/statusBarBackground.png");
     AM.queueDownload("./images/statusBarForeground.png");
     AM.queueDownload("./images/healthBarEnemyForeground.png");
@@ -133,11 +134,19 @@ function startGame() {
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2000, -950, floorTexture.width * 4, floorTexture.height * 1, 100, false, 100, true));
 
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, -300, -1160, floorTexture.width * 60 , floorTexture.height * 3, 0, false, 0, false));
-    gameEngine.addEnemy(new Boss(gameEngine, AM.getAsset("./images/boss.png"), -270, -1240, 350, 200, 30));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, -300, -1600, floorTexture.width * 60 , floorTexture.height * 3, 0, false, 0, false));
+
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, -300, -1580, floorTexture.width * 3 , floorTexture.height * 17, 0, false, 0, false));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 1410, -2080, floorTexture.width * 3 , floorTexture.height * 17, 0, false, 0, false));
+
+    gameEngine.addEnemy(new Boss(gameEngine, AM.getAsset("./images/boss.png"), -200, -1240, 350, 200, 30));
 
 
+    /* BACKGROUND SCENERY */
     gameEngine.addScenery(new Sprite(gameEngine, backgroundTexture, -2800, -2000));
-
+    var arrowSprite = new Sprite(gameEngine, null, 4840, 350);
+    arrowSprite.setAnimation(new Animation(AM.getAsset("./images/arrow.png"), 0, 0, 247, 680, 4, 0.5, 4, true, 0.2));
+    gameEngine.addScenery(arrowSprite);
 
     var statusBarForegroundTexture = new Texture(AM.getAsset("./images/statusBarForeground.png"), 0, 0, 300, 125, 1.0);
     var statusBarBackgroundTexture = new Texture(AM.getAsset("./images/statusBarBackground.png"), 0, 0, 300, 125, 1.0);

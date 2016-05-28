@@ -66,7 +66,7 @@ AssetManager.prototype.downloadSound = function(id, path, soundsCallback) {
 }
 
 AssetManager.prototype.isDone = function () {
-    return this.downloadQueue.length === this.successCount + this.errorCount;
+    return (this.downloadQueue.length + this.soundsQueue.length) === (this.successCount + this.errorCount);
 }
 
 AssetManager.prototype.downloadAll = function (callback) {

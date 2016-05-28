@@ -44,6 +44,7 @@ function GameEngine() {
     this.alpha2 = 0.0;
     this.playing = false;
     this.endBattle = false;
+    this.isTrapped = false;
 }
 
 GameEngine.prototype.init = function(ctx) {
@@ -176,24 +177,28 @@ GameEngine.prototype.draw = function() {
         this.ctx.textAlign = "center";
         this.ctx.fillText("YOU DIED", this.camera.position.x, this.camera.position.y);
     } else if (this.isWinner) {
-        if (this.alpha < 1)
-            this.alpha += 0.01;
+        if (this.alpha2 < 1) {
+            this.alpha2 += 0.01;
+        } else {
+            if (this.alpha < 1)
+                this.alpha += 0.01;
+
+            this.ctx.fillStyle = 'rgba(0,0,0,' + this.alpha + ')';
+            this.ctx.fillRect(this.camera.position.x - this.ctx.canvas.width / 2,
+            this.camera.position.y - this.ctx.canvas.height / 2,
+            this.ctx.canvas.width, this.ctx.canvas.height);
+        }
 
         this.ctx.font = "100px Arial";
-        this.ctx.fillStyle = "rgba(0,0,0," + this.alpha + ")";
+        this.ctx.fillStyle = "rgba(0,0,0," + this.alpha2 + ")";
         this.ctx.textAlign = "center";
         this.ctx.fillText("CONGRATULATIONS", this.camera.position.x + 5, this.camera.position.y + 5);
 
         this.ctx.font = "100px Arial";
-        this.ctx.fillStyle = "rgba(255,255,0," + this.alpha + ")";
+        this.ctx.fillStyle = "rgba(255,255,0," + this.alpha2 + ")";
         this.ctx.textAlign = "center";
         this.ctx.fillText("CONGRATULATIONS", this.camera.position.x, this.camera.position.y);
-    } else {
-        this.ctx.font = "12px Arial";
-        this.ctx.fillStyle = "rgba(255,255,0," + 1.0 + ")";
-        this.ctx.textAlign = "center";
-        this.ctx.fillText("patience..", 4860, 600);
-    }
+    } 
     
     this.ctx.restore();
 }
@@ -234,6 +239,11 @@ GameEngine.prototype.update = function() {
             this.players.splice(i, 1);
         } else {
             this.players[i].update();
+            if (this.players[i].character.position.y < -1160 && this.players[i].character.position.x < 1000 && !this.isTrapped) {
+                this.entities[this.entities.length - 1].movingRangeInY = 220;
+                this.entities[this.entities.length - 1].verticalMoveCounter = 220;
+                this.isTrapped = true;
+            }
         }
     }
 
