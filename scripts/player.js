@@ -59,6 +59,12 @@ Player.prototype.handleKeys = function() {
         this.character.teleport();
     } else if (this.character.controller.pressedKeys[87] || this.character.isJumping) {
         this.character.jump();
+
+        if (this.character.controller.pressedKeys[65] && this.character.body.velocity.x == 0) {
+            this.character.position.x -= 3;
+        } else if (this.character.controller.pressedKeys[68] && this.character.body.velocity.x == 0) {
+            this.character.position.x += 3;
+        }
     } else if (this.character.controller.pressedKeys[73] || this.character.isAttacking) {
         this.character.attack();
     } else if (this.character.controller.pressedKeys[79] || this.character.isThrowing) {
