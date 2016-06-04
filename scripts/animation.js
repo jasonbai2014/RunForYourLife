@@ -214,9 +214,9 @@ ExplosiveKnife.prototype.draw = function(ctx) {
     }
 }
 
-function Rasengan(gameEngine, spriteSheet, movingToRight, x, y) {
+function Rasengan(gameEngine, spriteSheet, damage, movingToRight, x, y) {
     this.rasenganAnimation = new Animation(spriteSheet, 460, 865, 100 ,76, 4, 0.2, 4, true, 1.5);
-    Weapon.call(this, "naruto", 50, gameEngine, x, y,
+    Weapon.call(this, "naruto", damage, gameEngine, x, y,
         this.rasenganAnimation.frameWidth, this.rasenganAnimation.frameHeight);
 
     this.speed = 600;
@@ -324,8 +324,8 @@ FireBall.prototype.collide = function(other) {
     }
 }
 
-function Fist(gameEngine, owner, x, y) {
-    Weapon.call(this, owner, 5, gameEngine, x, y, 15, 30);
+function Fist(gameEngine, owner, damage, x, y) {
+    Weapon.call(this, owner, damage, gameEngine, x, y, 15, 30);
 
 	this.isDisabled = false;
 	this.body.gravityEnabled = false;
@@ -380,6 +380,7 @@ function Naruto(gameEngine, spriteSheet, x, y) {
     this.attackAnimation = new Animation(spriteSheet, 615, 272, 60, 60, 3, 0.10, 3, true, 1.5);
     this.throwKnifeAnimation = new Animation(spriteSheet, 385, 51, 60, 60, 3, 0.13, 3, false, 1.5);
     this.specialAttackAnimation = new Animation(spriteSheet, 15, 466, 125, 101, 8, 0.20, 24, false, 1.5);
+    this.powerUpAnimation = new Animation(AM.getAsset("./images/powerup.png"), 8, 11, 103, 138, 4, 0.2, 4, true, 1);
     // the character stays still initially
     this.currentAnimation = this.idleAnimation;
     Being.call(this, 500, 50, 0, gameEngine, x, y, this.currentAnimation.frameWidth, this.currentAnimation.frameHeight + 25);
@@ -398,6 +399,8 @@ function Naruto(gameEngine, spriteSheet, x, y) {
     this.secondJump = 0; // a counter for visual effect of double jump
     this.justLanding = 0; // a counter for landing visual effect
     this.soundCoolDown = 300;
+    this.powerUpCounter = 0;
+    this.attackBasePoint = 1;
 };
 
 Naruto.prototype = new Being();
@@ -408,6 +411,10 @@ Naruto.prototype.update = function() {
 		this.removeFromWorld = true;
 		return;
 	}
+
+    if (this.powerUpCounter == 0) {
+        this.attackBasePoint = 1;
+    }
 
 	Being.prototype.update.call(this);
 };
@@ -448,6 +455,11 @@ Naruto.prototype.draw = function(ctx) {
                 this.position.x - 20, this.position.y + 56, 19, 33);
         }
 
+        if (this.powerUpCounter > 0) {
+            this.powerUpAnimation.drawFrame(this.game.clockTick, ctx, this.position.x - 20, this.position.y - 50);
+            this.powerUpCounter--;
+        }
+
         this.currentAnimation.drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y);
     } else {
         ctx.save();
@@ -458,6 +470,11 @@ Naruto.prototype.draw = function(ctx) {
             // visual effect for running
             ctx.drawImage(AM.getAsset("./images/visual_effects.png"), 39, 26, 19, 33,
                 940 - this.position.x, this.position.y + 56, 19, 33);
+        }
+
+        if (this.powerUpCounter > 0) {
+            this.powerUpAnimation.drawFrame(this.game.clockTick, ctx, 940 - this.position.x, this.position.y - 50);
+            this.powerUpCounter--;
         }
 
         this.currentAnimation.drawFrame(this.game.clockTick, ctx, 960 - this.position.x, this.position.y);
@@ -483,9 +500,8 @@ Naruto.prototype.attack = function() {
 
     if (this.isAttacking && this.currentAnimation.currentFrame() == 2) {
     	var x = this.movingForward ? this.position.x + this.width + 15 : this.position.x - 20;
-    	this.game.addEntity(new Fist(gameEngine, "naruto", x, this.position.y + this.height / 2 + 30));
-
-        
+    	this.game.addEntity(new Fist(gameEngine, "naruto", 5 * this.attackBasePoint,
+            x, this.position.y + this.height / 2 + 30));
     }
 };
 
@@ -566,8 +582,8 @@ Naruto.prototype.specialAttack = function() {
             this.currentAnimation = this.idleAnimation;
             this.isBusy = false;
             var startX = this.movingForward ? this.position.x + 70 : this.position.x - 50;
-            this.game.addEntity(new Rasengan(gameEngine, AM.getAsset("./images/naruto.png"), this.movingForward,
-                startX, this.position.y + 15));
+            this.game.addEntity(new Rasengan(gameEngine, AM.getAsset("./images/naruto.png"), 50 * this.attackBasePoint,
+                this.movingForward, startX, this.position.y + 15));
         }
     }
 };
@@ -637,8 +653,8 @@ Naruto.prototype.throwKnife = function() {
         this.isThrowing = this.controller.pressedKeys[79];
         
         var startX = this.movingForward ? this.position.x + this.width + 20 : this.position.x - this.width;
-        this.game.addEntity(new Knife(gameEngine, AM.getAsset("./images/naruto.png"), "naruto", 10, this.movingForward,
-            startX, this.position.y + this.height - 50));
+        this.game.addEntity(new Knife(gameEngine, AM.getAsset("./images/naruto.png"), "naruto",
+            10 * this.attackBasePoint, this.movingForward, startX, this.position.y + this.height - 50));
         AM.getSound("./sounds/throw_knife.wav").play();
     }
 
@@ -766,7 +782,7 @@ Enemy.prototype.punch = function() {
         this.isPunching = false;
 
         var x = this.movingToRight ? this.position.x + this.width + 2 : this.position.x - 10;
-        this.game.addEntity(new Fist(this.game, "enemy", x, this.position.y + 20));
+        this.game.addEntity(new Fist(this.game, "enemy", 5, x, this.position.y + 20));
         AM.getSound("./sounds/punch.wav").play();
     }
 };

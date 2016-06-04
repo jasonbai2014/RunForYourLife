@@ -30,6 +30,7 @@ function loadAssets() {
     AM.queueDownload("./images/energyBar.png");
     AM.queueDownload("./images/naruto_headshots.png");
     AM.queueDownload("./images/visual_effects.png");
+    AM.queueDownload("./images/powerup.png");
 
     loadingUI();
 	AM.downloadAll(startGame);
@@ -64,6 +65,7 @@ function startGame() {
 
     var player = new Player(new Naruto(gameEngine, AM.getAsset("./images/naruto.png"), 40, 450));
     gameEngine.addPlayer(player);
+    gameEngine.addEntity(new PowerUpItem(gameEngine, 1600, -930, 30, 50));
 
 
     gameEngine.addEnemy(new Enemy(gameEngine, AM.getAsset("./images/enemy.png"), 400, 430, 50, 25, 22));
@@ -120,7 +122,6 @@ function startGame() {
     /* UPPER LEVEL */
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3000, -500, floorTexture.width * 54, floorTexture.height * 1, 0, false, 0, false));
 
-
     /* MOVING PILLARS */
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 4000, -1200, floorTexture.width * 1, floorTexture.height * 20, 0, false, 50, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 3900, -1150, floorTexture.width * 1, floorTexture.height * 18, 0, false, 46, false));
@@ -139,7 +140,9 @@ function startGame() {
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2600, -820, floorTexture.width * 3, floorTexture.height * 1, 80, false, 0, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2900, -960, floorTexture.width * 4, floorTexture.height * 1, 110, true, 0, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2550, -1000, floorTexture.width * 2, floorTexture.height * 1, 110, false, 0, false));
-    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 2000, -950, floorTexture.width * 4, floorTexture.height * 1, 100, false, 100, true));
+
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 1750, -1000, floorTexture.width * 4, floorTexture.height * 1, 150, true, 150, true));
+    gameEngine.addEntity(new Terrain(gameEngine, floorTexture, 1600, -900, floorTexture.width * 4, floorTexture.height * 1, 200, false, 0, true));
 
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, -300, -1160, floorTexture.width * 60 , floorTexture.height * 3, 0, false, 0, false));
     gameEngine.addEntity(new Terrain(gameEngine, floorTexture, -300, -1600, floorTexture.width * 60 , floorTexture.height * 3, 0, false, 0, false));

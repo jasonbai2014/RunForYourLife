@@ -18,8 +18,6 @@ window.cancelRequestAnimFrame = (function() {
         clearTimeout
 })();
 
-
-
 /*************************************************/
 /****************** E N G I N E ******************/
 /*************************************************/
@@ -244,7 +242,7 @@ GameEngine.prototype.update = function() {
             this.players.splice(i, 1);
         } else {
             this.players[i].update();
-            if (this.players[i].character.position.y < -1160 && this.players[i].character.position.x < 1000 && !this.isTrapped) {
+            if (this.players[i].character.position.y < -1160 && this.players[i].character.position.x < 1400 && !this.isTrapped) {
                 this.entities[this.entities.length - 1].movingRangeInY = 220;
                 this.entities[this.entities.length - 1].verticalMoveCounter = 220;
                 this.isTrapped = true;
@@ -430,7 +428,6 @@ Camera.prototype.update = function() {
         this.ctx.translate(-translateStep, 0);
         this.position.x = this.focus.position.x;
     }
-
 
     if (this.focus.position.y > this.position.y + 60) {
         this.position.y += 2;

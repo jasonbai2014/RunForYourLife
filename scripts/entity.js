@@ -305,6 +305,25 @@ Item.prototype.constructor = Item;
 Item.prototype.update = function() {};
 Item.prototype.collide = function() {};
 
+function PowerUpItem(game, x, y, width, height) {
+    Item.call(this, game, x, y, width, height, false);
+    this.gravityEnabled = false;
+}
+
+PowerUpItem.prototype = new Item();
+PowerUpItem.prototype.constructor = PowerUpItem;
+
+PowerUpItem.prototype.collide = function(other) {
+    if (other instanceof Naruto) {
+        other.powerUpCounter = 2000;
+        other.attackBasePoint = 3;
+        this.removeFromWorld = true;
+    }
+}
+
+PowerUpItem.prototype.draw = function(ctx) {
+    ctx.drawImage(AM.getAsset("./images/powerup.png"), 29, 213, 96, 122, this.position.x, this.position.y, this.width, this.height);
+}
 
 function HealthPotion(game, x, y, width, height, expires=true) {
     this.healthPoint = 200;
@@ -330,7 +349,7 @@ HealthPotion.prototype.collide = function(other) {
 
 HealthPotion.prototype.draw = function(ctx) {
     ctx.drawImage(AM.getAsset("./images/visual_effects.png"), 136, 93, 24, 24,
-        this.position.x, this.position.y, 24, 24);
+        this.position.x, this.position.y, this.width, this.height);
 };
 
 
@@ -356,7 +375,7 @@ EnergyPotion.prototype.collide = function(other) {
 
 EnergyPotion.prototype.draw = function(ctx) {
     ctx.drawImage(AM.getAsset("./images/visual_effects.png"), 207, 89, 36, 32,
-        this.position.x, this.position.y, 36, 32);
+        this.position.x, this.position.y, this.width, this.height);
 };
 
 
