@@ -423,6 +423,18 @@ Naruto.prototype.update = function() {
  * Determines how Naruto is shown on the canvas.
  */
 Naruto.prototype.draw = function(ctx) {
+    if (this.movingForward) {
+        if (this.powerUpCounter > 0) {
+            this.powerUpAnimation.drawFrame(this.game.clockTick, ctx, this.position.x - 20, this.position.y - 50);
+            this.powerUpCounter--;
+        }
+    } else {
+        if (this.powerUpCounter > 0) {
+            this.powerUpAnimation.drawFrame(this.game.clockTick, ctx, 940 - this.position.x, this.position.y - 50);
+            this.powerUpCounter--;
+        }
+    }
+
     if (this.specialAttacking) {
         this.position.y -= 60;
     }
@@ -455,11 +467,6 @@ Naruto.prototype.draw = function(ctx) {
                 this.position.x - 20, this.position.y + 56, 19, 33);
         }
 
-        if (this.powerUpCounter > 0) {
-            this.powerUpAnimation.drawFrame(this.game.clockTick, ctx, this.position.x - 20, this.position.y - 50);
-            this.powerUpCounter--;
-        }
-
         this.currentAnimation.drawFrame(this.game.clockTick, ctx, this.position.x, this.position.y);
     } else {
         ctx.save();
@@ -470,11 +477,6 @@ Naruto.prototype.draw = function(ctx) {
             // visual effect for running
             ctx.drawImage(AM.getAsset("./images/visual_effects.png"), 39, 26, 19, 33,
                 940 - this.position.x, this.position.y + 56, 19, 33);
-        }
-
-        if (this.powerUpCounter > 0) {
-            this.powerUpAnimation.drawFrame(this.game.clockTick, ctx, 940 - this.position.x, this.position.y - 50);
-            this.powerUpCounter--;
         }
 
         this.currentAnimation.drawFrame(this.game.clockTick, ctx, 960 - this.position.x, this.position.y);
